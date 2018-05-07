@@ -6,7 +6,7 @@ class SeqHull{
   private final int[] x, y;
   private final int n;
   private int minIndex, maxIndex, maxY;
-  private IntList result, neg, totalPos;
+  private IntList result;
 
   //Set<Integer> result = new LinkedHashSet<Integer>();
 
@@ -14,15 +14,14 @@ class SeqHull{
     this.n = n;
     this.x = x;
     this.y = y;
-    result = new IntList(n/2);
+    result = new IntList();
   }
 
 
   public void start(){
     minMax();
     result.add(maxIndex);
-    startHulling(maxIndex, minIndex);
-
+    startHulling();
   }
 
 
@@ -46,10 +45,10 @@ class SeqHull{
   }
 
 
-  public void startHulling(int index1, int index2){
+  public void startHulling(){
     int[] res = calculateLine(maxIndex, minIndex);
-    neg = new IntList(n/2);
-    totalPos = new IntList(n/2);
+    IntList neg = new IntList(n/2);
+    IntList pos = new IntList(n/2);
 
     int dist, maxDist = 0, minDist = 0, maxDistIndex = -1, minDistIndex = 0;
 
@@ -58,12 +57,12 @@ class SeqHull{
       dist = calculateDistance(res, x[i], y[i]);
 
       if(dist > 0){
-        totalPos.add(i);
+        pos.add(i);
       }else if(dist < 0){
         neg.add(i);
       }
     }
-    recursiveHull(maxIndex, minIndex, totalPos);
+    recursiveHull(maxIndex, minIndex, pos);
 
     result.add(minIndex);
 
@@ -83,7 +82,7 @@ class SeqHull{
     for(int i = 0; i < pos.size(); i++){
       if(pos.get(i) != max || pos.get(i) != min){
         dist = calculateDistance(res, x[pos.get(i)], y[pos.get(i)]);
-        if(dist >= 0){
+        if(dist > 0){
           localPos.add(pos.get(i));
           if(dist > maxDist){
             maxDist = dist;
@@ -103,8 +102,6 @@ class SeqHull{
   }
 
 
-
-  //kan returnere bare resultatet også (plusse sammen res 0-2)
   public int[] calculateLine(int index1, int index2){
     int[] res = new int[3];
 
@@ -135,20 +132,5 @@ class SeqHull{
     return result;
   }
 
-
-  // public int splitPoints(){
-  //   neg = new IntList(n/2);
-  //   pos = new IntList(n/2);
-  //
-  //   for(int i = 0; i < n; i++){
-  //     if(isNegative(x[i], y[i])){
-  //       neg.add(i);
-  //     }else if(isPos(x[i], y[i])){
-  //       pos.add(i);
-  //     }
-  //   }
-  //
-  //   return index;
-  // }
 
 }

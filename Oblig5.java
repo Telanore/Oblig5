@@ -1,16 +1,20 @@
 class Oblig5 {
-  public int n, k;
+  public int n, k, j;
   public int[] x, y;
   private NPunkter17 np;
   public int MAX_X, MAX_Y;
   private IntList sResult, pResult;
   private boolean tegn;
+  private double[] seqTimes, parTimes;
+  private long t;
+
 
   public Oblig5(int n, boolean tegn){
     this.n = n;
     this.tegn = tegn;
     x = new int[n];
     y = new int[n];
+    k = Runtime.getRuntime().availableProcessors();
   }
 
 
@@ -38,16 +42,19 @@ class Oblig5 {
 
 
   public void start(){
+    j = 1;
     makePoints();
     seq();
-
     if(tegn){
       System.out.println("Result seq:");
       for(int i = 0; i < sResult.size(); i++){
         System.out.println(sResult.get(i));
       }
-      TegnUt t = new TegnUt(this, sResult);
+      System.out.println();
+      TegnUt tu = new TegnUt(this, sResult);
     }
+
+    par();
   }
 
   public void makePoints(){
@@ -57,11 +64,35 @@ class Oblig5 {
 
 
   public void seq(){
-    SeqHull s = new SeqHull(n, x, y);
-    s.start();
-    MAX_X = s.getMaxX();
-    MAX_Y = s.getMaxY();
-    sResult = s.getResult();
+    SeqHull s;
+    seqTimes = new double[j];
+
+    for(int i = 0; i < j; i++){
+      s = new SeqHull(n, x, y);
+      t = System.nanoTime();
+      s.start();
+      seqTimes[i] = (System.nanoTime() / 1000000.0) - t;
+      MAX_X = s.getMaxX();
+      MAX_Y = s.getMaxY();
+      sResult = s.getResult();
+
+    }
 
   }
+
+
+
+  public void par(){
+    ParHull p;
+    parTimes = new double[j];
+    for(int i = 0; i < j; i++){
+      p = new ParHull(n, x, y, k);
+      t = System.nanoTime();
+      p.start();
+      parTimes[i] = (System.nanoTime() / 1000000.0) - t;
+      pResult = p.getResult();
+    }
+
+  }
+
 }
