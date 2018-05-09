@@ -46,7 +46,7 @@ class Oblig5 {
     makePoints();
     seq();
     if(tegn){
-      System.out.println("Result seq:");
+      System.out.println("\nResult seq:");
       for(int i = 0; i < sResult.size(); i++){
         System.out.println(sResult.get(i));
       }
@@ -54,7 +54,7 @@ class Oblig5 {
       TegnUt tu = new TegnUt(this, sResult);
     }
 
-    par();
+  //  par();
   }
 
   public void makePoints(){
